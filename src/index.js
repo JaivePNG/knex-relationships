@@ -2,17 +2,36 @@ var wombleList = require('./templates/womble-list.hbs')
 var detailsTemplate = require('./templates/details.hbs')
 
 document.addEventListener('DOMContentLoaded', function () {
+    var header =  {
+      title: 'Wombles',
+      subtitle: "They clean up"
+    }
   var wombles = [
-    { name: 'Orinocco', email: 'orinocco@wimbledoncommon.net', details: 'Tin cans' },
-    { name: 'Tomsk', email: 'tomsk@wimbledoncommon.net', details: 'Plastic bags' },
-    { name: 'Bungo', email: 'bungo@wimbledoncommon.net', details: 'Discarded wombat poop' }
+    { name: 'Orinocco', email: 'orinocco@wimbledoncommon.net', details: 'Tin cans', details2:'Lids'},
+    { name: 'Tomsk', email: 'tomsk@wimbledoncommon.net', details: 'Plastic bags', details2:'Drips'},
+    { name: 'Bungo', email: 'bungo@wimbledoncommon.net', details: 'Discarded wombat poop', details3:'Rips'}
   ]
-  refreshContent(wombles)
+  var footer = {
+      contact:'wombles@womble.com',
+      date:'copyright@wildwomble'
+  }
+  var links = [
+      {
+      address: 'www.google.com',
+      text: "Go to Google"
+  }
+]
+  refreshContent(header, wombles, footer, links)
 })
 
-function refreshContent (wombles) {
+function refreshContent (header, wombles, footer, links) {
   var div = document.createElement('div')
-  div.innerHTML = wombleList({ wombles: wombles })
+  div.innerHTML = wombleList({
+      header: header,
+      wombles: wombles,
+      footer: footer,
+      links:links
+  })
   document.body.appendChild(div)
   bindEventListeners(wombles)
 }
@@ -54,5 +73,18 @@ function expandWomble (match, target) {
     var ul = document.createElement('ul')
     ul.innerHTML = detailsTemplate(match)
     target.appendChild(ul)
+  }
+}
+
+function wombleName (innerHTML, wombat) {
+  return innerHTML.includes(wombat.details2)
+}
+
+function bindEventListeners (wombles) {
+  var lis = document.getElementsByTagName('li')
+  for (var i = 0; i < lis.length; i++) {
+    lis[i].addEventListener('click', function (e) {
+      wombleName(e.target, wombles)
+    })
   }
 }
